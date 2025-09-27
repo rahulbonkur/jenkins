@@ -12,10 +12,10 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'application', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
-                          ssh -i $SSH_KEY -o StrictHostKeyChecking=no ec2-user@13.232.77.34 "hostname -i"
+                          ssh -i $SSH_KEY -o StrictHostKeyChecking=no ec2-user@43.205.111.114 "hostname -i"
+                          echo 'Connecting to the Web Server...'
                         '''
                 }
-                echo 'Connecting to the Web Server...'
             }
         }
     }
