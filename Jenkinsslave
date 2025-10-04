@@ -4,15 +4,7 @@ pipeline {
         stage('Install Git') {
             steps {
                 sh '''
-                    #!/bin/bash
-                    echo "Updating package list..."
-                    sudo apt-get update -y
-
-                    echo "Installing Git..."
-                    sudo apt-get install -y git
-
-                    echo "Git version:"
-                    git --version
+                    sudo yum install -y git
                 '''
             }
         }
@@ -28,10 +20,7 @@ pipeline {
         stage('Connecting to Web Server') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'application', keyFileVariable: 'SSH_KEY')]) {
-                    sh '''
-                        echo "Connected to Web Server..."
-                        hostname -i
-                    '''
+                    sh 'hostname -i'
                 }
             }
         }
