@@ -1,6 +1,23 @@
 pipeline {
     agent { label 'slave-1' }
     stages {
+stages {
+        stage('Install Git') {
+            steps {
+                sh '''
+                    #!/bin/bash
+                    echo "Updating package list..."
+                    sudo apt-get update -y
+                    
+                    echo "Installing Git..."
+                    sudo apt-get install -y git
+                    
+                    echo "Git version:"
+                    git --version
+                '''
+            }
+        }
+    }
         stage('Checkout SCM') {
             steps {
                 checkout scm
