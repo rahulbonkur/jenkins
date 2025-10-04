@@ -12,7 +12,8 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'application', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
-                          hostname -i                        '''
+                          hostname -i                        
+                        '''
                 }
             }
         }
