@@ -1,11 +1,13 @@
 pipeline {
     agent { label 'slave-1' }
+    options {
+        skipDefaultCheckout()
+    }
     stages {
         stage('Install Git') {
             steps {
-                sh '''
-                    sudo yum install -y git
-                '''
+                sh 'sudo yum install -y git'
+                sh 'git --version'
             }
         }
 
@@ -14,14 +16,6 @@ pipeline {
                 checkout scm
                 sh 'pwd'
                 sh 'ls -lrt'
-            }
-        }
-
-        stage('Connecting to Web Server') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'application', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'hostname -i'
-                }
             }
         }
     }
