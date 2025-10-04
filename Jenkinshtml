@@ -1,1 +1,58 @@
 
+pipeline {
+    agent { label 'slave-1' }
+    options {
+        skipDefaultCheckout()
+    }
+    stages {
+        stage('Install Git') {
+            steps {
+                sh 'sudo yum install -y git'
+            }
+        }
+
+        stage('Install Nginx') {
+            steps {
+                sh 'sudo yum install -y nginx'
+            }
+        }
+
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+                sh 'pwd && ls -lrt'
+            }
+        }
+
+        stage('Create Sample HTML') {
+            steps {
+                sh '''
+                    cat <<EOT > index.html
+                    <html>
+                        <head>
+                            <title>Welcome</title>
+                        </head>
+                        <body>
+                            <h1>Hello from Jenkins!</h1>
+                            <p>This page was created by Jenkins pipeline.</p>
+                        </body>
+                    </html>
+                    EOT
+                '''
+            }
+        }
+
+        stage('Copy HTML File') {
+            steps {
+                sh 'sudo cp index.html /usr/share/nginx/html/index.html'
+            }
+        }
+
+        stage('Restart Nginx') {
+            steps {
+                sh 'sudo systemctl restart nginx'
+                sh 'sudo systemctl status nginx --no-pager'
+            }
+        }
+    }
+}
