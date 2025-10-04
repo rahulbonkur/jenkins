@@ -1,4 +1,3 @@
-
 pipeline {
     agent { label 'slave-1' }
     options {
@@ -50,8 +49,12 @@ pipeline {
 
         stage('Restart Nginx') {
             steps {
-                sh 'sudo systemctl restart nginx'
-                sh 'sudo systemctl status nginx --no-pager'
+                sh '''
+                    sudo systemctl restart nginx
+                    echo "Nginx restarted successfully!"
+                    echo "Server IP:"
+                    hostname -i
+                '''
             }
         }
     }
