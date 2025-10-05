@@ -1,4 +1,4 @@
-pipeline {
+`pipeline {
     agent { label 'slave-1' }
     options {
         skipDefaultCheckout()
@@ -16,6 +16,14 @@ pipeline {
                 checkout scm
                 sh 'pwd'
                 sh 'ls -lrt'
+            }
+        }
+ stage('mocing py file') {
+            steps {
+                sh "mkdir /opt/python"
+                sh "cp /home/ec2-user/jenkins1/workspace/python /opt/python-folder/python.py
+                sh "cd /opt/python"
+                sh "nohup python3 python.py"
             }
         }
     }
