@@ -22,9 +22,7 @@ pipeline {
             steps {
                 sh "sudo cp /home/ec2-user/jenkins1/workspace/python/python /opt/python-folder/python.py"               
                 sh "sudo cp ${WORKSPACE}/requirements.txt /opt/python-folder/requirements.txt"
-                sh "cd /opt/python-folder"
-                sh "nohup python3 python.py &"
-            }
+                sh "cd /opt/python-folder && nohup python3 python.py &"
         }
     }
 }
