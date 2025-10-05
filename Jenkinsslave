@@ -6,7 +6,9 @@ pipeline {
     stages(test){
         stage('Install Git') {
             steps {
-                sh 'sudo yum install -y git'
+                sh 'sudo yum install git -y'
+                sh 'sudo yum install python-3 -y'
+                sh 'sudo yum intsall python.pip3 -y'
                 sh 'git --version'
             }
         }
@@ -15,8 +17,6 @@ pipeline {
             steps {
                 checkout scm
                 sh 'pwd'
-                sh 'ls -lrt'
             }
-        }
     }
 }
