@@ -3,7 +3,7 @@ pipeline {
     options {
         skipDefaultCheckout()
     }
-    stages {
+    stages(test){
         stage('Install Git') {
             steps {
                 sh 'sudo yum install -y git'
