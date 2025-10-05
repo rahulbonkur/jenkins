@@ -18,12 +18,9 @@ pipeline {
                 sh 'ls -lrt'
             }
         }
- stage('mocing py file') {
+ stage('Debug Workspace') {
     steps {
-        sh "sudo mkdir -p /opt/python-folder"
-        sh "sudo cp ${WORKSPACE}/python-folder/python.py /opt/python-folder/python.py"
-        sh "sudo cp ${WORKSPACE}/requirements.txt /opt/python-folder/requirements.txt"
-        sh "cd /opt/python-folder && nohup python3 python.py &"
+        sh "ls -R ${WORKSPACE}"
     }
 }
     }
