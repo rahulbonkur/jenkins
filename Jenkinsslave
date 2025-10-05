@@ -20,7 +20,7 @@ pipeline {
         }
  stage('mocing py file') {
             steps {
-                sh "mkdir /opt/python"
+                sh "sudo mkdir /opt/python"
                 sh "cp /home/ec2-user/jenkins1/workspace/python /opt/python-folder/python.py"
                 sh "cd /opt/python"
                 sh "nohup python3 python.py"
