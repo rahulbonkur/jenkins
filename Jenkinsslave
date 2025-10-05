@@ -18,7 +18,7 @@ pipeline {
                 sh 'ls -lrt'
             }
         }
-stage('coping code') {
+stage('Deploy Python Flask App') {
     steps {
         sh '''
         # 1. Create target folder if it doesn't exist
@@ -30,18 +30,26 @@ stage('coping code') {
         # 3. Copy requirements
         sudo cp "${WORKSPACE}/requirements.txt" /opt/python-08/requirements.txt
 
-        # 4. Install dependencies (pip3 must be installed)
+        # 4. Install dependencies (ensure pip3 is installed)
+        if ! command -v pip3 &> /dev/null; then
+            sudo yum install -y python3
+            sudo python3 -m ensurepip
+            sudo python3 -m pip install --upgrade pip
+        fi
         cd /opt/python-08
         sudo pip3 install -r requirements.txt
 
         # 5. Ensure Flask listens on all interfaces
         sudo sed -i "s/app.run(/app.run(host='0.0.0.0', /" python.py
 
-        # 6. Kill any previous process
-        sudo pkill -f python.py || true
+        # 6. Fix permissions so Jenkins can write logs
+        sudo chown -R ec2-user:ec2-user /opt/python-08
 
-        # 7. Run Python script in background with logging
-        sudo nohup python3 python.py > app.log 2>&1 &
+        # 7. Kill any previous python.py process
+        pkill -f python.py || true
+
+        # 8. Run Flask app in background with logging
+        nohup python3 python.py > app.log 2>&1 &
         '''
     }
 }
