@@ -19,11 +19,31 @@ pipeline {
             }
         }
  stage('mocing py file') {
-            steps {
-                sh "sudo cp /home/ec2-user/jenkins1/workspace/python/python /opt/python-folder/python.py"               
-                sh "sudo cp ${WORKSPACE}/requirements.txt /opt/python-folder/requirements.txt"
-                sh "cd /opt/python-folder && nohup python3 python.py &"
+    steps {
+        sh '''
+        # Create target folder
+        sudo mkdir -p /opt/python-folder
+
+        # Copy python.py
+        sudo cp "${WORKSPACE}/python" /opt/python-folder/python.py
+
+        # Copy requirements.txt
+        sudo cp "${WORKSPACE}/requirements.txt" /opt/python-folder/requirements.txt
+
+        # Install dependencies
+        cd /opt/python-folder
+        sudo pip3 install -r requirements.txt
+
+        # Ensure Flask listens on all interfaces
+        sudo sed -i "s/app.run(/app.run(host='0.0.0.0', /" python.py
+
+        # Kill any previous running python.py
+        sudo pkill -f python.py || true
+
+        # Run python.py in background with logging
+        nohup python3 python.py > app.log 2>&1 &
+        '''
+    }
 }
-        }
     }
 }
