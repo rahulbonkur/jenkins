@@ -19,14 +19,31 @@ pipeline {
             }
         }
 stage('coping code') {
-            steps {
-               // sh "sudo mkdir /opt/python-08"
-                sh "sudo cp /home/ec2-user/jenkins1/workspace/python/python.py /opt/python-08/python.py"
-                sh "sudo cp /home/ec2-user/jenkins1/workspace/python/requirements.txt /opt/python-08/requirements.txt"
-                sh " cd /opt/python" 
-                sh "nohup python3 sample.py > abc 2>&1 &"
-                
-            }
-        }
+    steps {
+        sh '''
+        # 1. Create target folder if it doesn't exist
+        sudo mkdir -p /opt/python-08
+
+        # 2. Copy python file
+        sudo cp "${WORKSPACE}/python" /opt/python-08/python.py
+
+        # 3. Copy requirements
+        sudo cp "${WORKSPACE}/requirements.txt" /opt/python-08/requirements.txt
+
+        # 4. Install dependencies (pip3 must be installed)
+        cd /opt/python-08
+        sudo pip3 install -r requirements.txt
+
+        # 5. Ensure Flask listens on all interfaces
+        sudo sed -i "s/app.run(/app.run(host='0.0.0.0', /" python.py
+
+        # 6. Kill any previous process
+        sudo pkill -f python.py || true
+
+        # 7. Run Python script in background with logging
+        sudo nohup python3 python.py > app.log 2>&1 &
+        '''
+    }
+}
     }
 }
