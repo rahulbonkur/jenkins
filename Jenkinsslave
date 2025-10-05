@@ -21,8 +21,8 @@ pipeline {
  stage('mocing py file') {
     steps {
         sh "sudo mkdir -p /opt/python-folder"
-        sh "cp ${WORKSPACE}/python.py /opt/python-folder/python.py"
-        sh "cp ${WORKSPACE}/requirements.txt /opt/python-folder/requirements.txt"
+        sh "sudo cp ${WORKSPACE}/python.py /opt/python-folder/python.py"
+        sh "sudo cp ${WORKSPACE}/requirements.txt /opt/python-folder/requirements.txt"
         sh "cd /opt/python-folder && nohup python3 python.py &"
     }
 }
