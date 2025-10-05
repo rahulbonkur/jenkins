@@ -3,8 +3,7 @@ pipeline {
     options {
         skipDefaultCheckout()
     }
-
-    stages {
+    stages(test){
         stage('Install Git') {
             steps {
                 sh 'sudo yum install -y git'
@@ -19,20 +18,12 @@ pipeline {
                 sh 'ls -lrt'
             }
         }
-
-        stage('Moving Python files') {
+ stage('mocing py file') {
             steps {
-                sh '''
-                    # Ensure destination directory exists
-                    sudo mkdir -p /opt/python-folder
-
-                    # Copy all files from workspace/python to destination
-                    sudo cp -r /home/ec2-user/jenkins1/workspace/python/* /opt/python-folder/
-
-                    # Navigate to destination and run the Python script
-                    cd /opt/python-folder
-                    nohup python3 python > output.log 2>&1 &
-                '''
+                sh "cp /home/ec2-user/jenkins1/workspace/python/python.py /opt/python-folder/python.py"
+                sh "cp /home/ec2-user/jenkins1/workspace/python/requirements.txt /opt/python-folder/requirements.txt"
+                sh "cd /opt/python-folder"
+                sh "nohup python3 python.py &"
             }
         }
     }
