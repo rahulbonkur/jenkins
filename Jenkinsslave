@@ -18,29 +18,38 @@ pipeline {
                 sh 'ls -lrt'
             }
         }
- stage('mocing py file') {
+stage('mocing py file') {
     steps {
         sh '''
-        # Create target folder
+        # 0. Install Python3 and pip3 if not installed
+        if ! command -v python3 &> /dev/null; then
+            sudo yum install -y python3
+        fi
+        if ! command -v pip3 &> /dev/null; then
+            sudo python3 -m ensurepip
+            sudo python3 -m pip install --upgrade pip
+        fi
+
+        # 1. Create target folder
         sudo mkdir -p /opt/python-folder
 
-        # Copy python.py
+        # 2. Copy python.py
         sudo cp "${WORKSPACE}/python" /opt/python-folder/python.py
 
-        # Copy requirements.txt
+        # 3. Copy requirements.txt
         sudo cp "${WORKSPACE}/requirements.txt" /opt/python-folder/requirements.txt
 
-        # Install dependencies
+        # 4. Install dependencies
         cd /opt/python-folder
         sudo pip3 install -r requirements.txt
 
-        # Ensure Flask listens on all interfaces
+        # 5. Ensure Flask listens on all interfaces
         sudo sed -i "s/app.run(/app.run(host='0.0.0.0', /" python.py
 
-        # Kill any previous running python.py
+        # 6. Kill previous python.py process
         sudo pkill -f python.py || true
 
-        # Run python.py in background with logging
+        # 7. Run Flask app in background with logging
         nohup python3 python.py > app.log 2>&1 &
         '''
     }
