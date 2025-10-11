@@ -18,7 +18,7 @@ phases:
     commands:
       - echo "Building Flask app package..."
       - mkdir -p output
-      - zip -r output/flask-app.zip . -x "*.git*" "output/*" "kubernetes/*"
+      - zip -r output/flask-app.zip . -x "*.git*" "output/*" "kubernetes/*" "Jenkinshtml/*"
 
   post_build:
     commands:
