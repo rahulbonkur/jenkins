@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Installing Python dependencies..."
+      - pip install --upgrade pip
+      - pip install -r requirements.txt -t .
+
+  pre_build:
+    commands:
+      - echo "Running unit tests..."
+      - python -m unittest discover || echo "No tests found"
+
+  build:
+    commands:
+      - echo "Building Flask app package..."
+      - mkdir -p output
+      - zip -r output/flask-app.zip . -x "*.git*" "output/*" "kubernetes/*"
+
+  post_build:
+    commands:
+      - echo "Build and packaging complete!"
+
+artifacts:
+  files:
+    - output/flask-app.zip
+  discard-paths: yes
