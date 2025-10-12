@@ -8,4 +8,4 @@ pip install -r requirements.txt .
 
 sleep 5s
 
-nohup python3 app.py > logs.txt 2>&1 &
+nohup python3 python.py > logs.txt 2>&1 &
